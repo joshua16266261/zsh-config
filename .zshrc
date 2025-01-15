@@ -17,7 +17,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_MAGIC_FUNCTIONS="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
@@ -53,3 +53,31 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 bindkey '\t\t' autosuggest-accept
+
+# checks to see if we are in a windows or linux dir
+function isWinDir {
+  case $(pwd -P) in
+    /mnt/*) return $(true);;
+    *) return $(false);;
+  esac
+}
+
+# wrap the git command to either run windows git or linux
+function git {
+  if isWinDir
+  then
+    git.exe "$@"
+  else
+    /usr/bin/git "$@"
+  fi
+}
+
+export PATH="$PATH:/home/joshuachen/nvim-linux64/bin"
+
+# CMake shortcuts
+function cmakej {
+  cmake "$@" -j$(nproc)
+}
+
+alias cmake_export="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+
